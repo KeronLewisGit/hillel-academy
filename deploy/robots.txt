@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin
+Disallow: /login
+Disallow: /family
+Sitemap: https://www.gohillel.com/sitemap.xml
