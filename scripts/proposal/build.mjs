@@ -183,15 +183,17 @@ function screenPages(sec, [key, title, bullets]) {
     </section>`).join('');
 }
 
-const foot = () => `<footer class="foot"><span>Hillel Academy · Online admissions, family portal and website</span><span>Code Canvas Consultants Ltd · ${esc(DATE)}</span></footer>`;
+// The school's own crest, taken from hillelacademyjm.com (public/img/brand).
+const CREST = img(path.resolve('public/img/brand/hillel-crest.png'));
+const foot = () => `<footer class="foot"><span class="fl"><img src="${CREST}" alt="">Hillel Academy · Online admissions, family portal and website</span><span>Code Canvas Consultants Ltd · ${esc(DATE)}</span></footer>`;
 const phone = (k, label) => `<figure><img src="${img(chunks[k].chunks[0])}" alt="${esc(label)}"><figcaption>${esc(label)}</figcaption></figure>`;
-const WORDMARK = (light = false) => `<div class="wordmark ${light ? 'light' : ''}"><span class="n">Hillel Academy</span><span class="s">Kingston · Jamaica · 1969</span></div>`;
+const WORDMARK = (light = false) => `<div class="wordmark ${light ? 'light' : ''}"><img src="${CREST}" alt="Hillel Academy crest"><div><span class="n">Hillel Academy</span><span class="s">Kingston · Jamaica · 1969</span></div></div>`;
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Hillel Academy – Online Admissions, Family Portal and Website Proposal</title>
 <style>
   ${FONTS}
   @page { size: Letter; margin: 0.5in 0.6in 0.55in; }
-  :root { --ink: #14213d; --ink-900: #111d38; --ink-950: #0b1428; --ink-2: #33405c; --ink-3: #4f5b73; --paper: #fbfaf6; --sky: #edf3fa; --line: #dde3ec; --rule: #c9daf0; --margin: #d8604c; --accent: #f0ac1c; --accent-soft: #fdf1d3; --link: #1d4a9a; }
+  :root { --ink: #14213d; --ink-900: #111d38; --ink-950: #0b1428; --ink-2: #33405c; --ink-3: #4f5b73; --paper: #fbfaf6; --sky: #edf3fa; --line: #dde3ec; --rule: #c9daf0; --margin: #d8604c; --accent: #f0ac1c; --accent-soft: #fdf1d3; --link: #0566a7; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; font-family: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif; color: var(--ink-2); font-size: 10.2pt; line-height: 1.5; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   h1, h2, h3 { font-family: "Young Serif", Georgia, serif; font-weight: 400; color: var(--ink); margin: 0; line-height: 1.08; letter-spacing: -0.005em; }
@@ -202,6 +204,8 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   .eyebrow::before { content: ''; width: 3px; height: 13px; border-left: 1px solid var(--margin); border-right: 1px solid var(--accent); }
   .muted { color: var(--ink-3); }
   .ruled { background-image: repeating-linear-gradient(180deg, transparent 0 calc(26px - 1px), rgba(255,255,255,.06) calc(26px - 1px) 26px); }
+  .wordmark { display: flex; align-items: center; gap: 12px; }
+  .wordmark img { height: 0.82in; width: auto; display: block; }
   .wordmark .n { font-family: "Young Serif", Georgia, serif; font-size: 20pt; color: var(--ink); display: block; line-height: 1; }
   .wordmark .s { display: block; margin-top: 4px; font-size: 7pt; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
   .wordmark.light .n { color: #fff; } .wordmark.light .s { color: rgba(255,255,255,.72); }
@@ -267,7 +271,9 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   .next li { margin: 5px 0; }
   .contact { margin-top: 14px; background: var(--ink-900); color: rgba(255,255,255,.86); border-radius: 6px; padding: 16px 18px; border-bottom: 4px solid var(--accent); }
   .contact b { color: #fff; font-family: "Young Serif", Georgia, serif; font-weight: 400; font-size: 15pt; display: block; margin-bottom: 4px; }
-  footer.foot { margin-top: auto; padding-top: 6px; font-size: 7.6pt; color: #8a93a6; display: flex; justify-content: space-between; border-top: 1px solid var(--line); }
+  footer.foot { margin-top: auto; padding-top: 6px; font-size: 7.6pt; color: #8a93a6; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); }
+  footer.foot .fl { display: inline-flex; align-items: center; gap: 6px; }
+  footer.foot .fl img { height: 15px; width: auto; display: block; }
 </style></head><body>
 
 <section class="page cover ruled">
@@ -279,7 +285,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
     <div class="photo"><img src="${img(path.resolve('public/img/campus-buildings-960.webp'))}" alt=""></div>
   </div>
   <div class="meta">
-    <div><b>Prepared for</b><span class="big">The Director / Head of School</span>Hillel Academy<br>51 Upper Mark Way, Kingston 8, Jamaica</div>
+    <div><b>Prepared for</b><span class="big">The Director / Head of School</span>Hillel Academy<br>51 Upper Mark Way, Kingston 8, Jamaica<br>Main office (876) 925-1980</div>
     <div><b>Prepared by</b><span class="big">Keron Lewis</span>Code Canvas Consultants Ltd, Port of Spain<br>codecanvastt.com · +1 868 466-CODE · keronlewis@live.com</div>
   </div>
 </section>
@@ -316,7 +322,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   <p>A parent reads the admissions page, books a campus visit or asks a question, then starts an application with a name, an email and a grade. A secure link opens the <b>family portal</b>, where the five steps save as they go and documents are uploaded from a phone. The application arrives in the <b>admissions office</b> dashboard with any documents waiting for review. When every required document is accepted, the application moves to “documents complete” by itself and the family is invited to book an assessment session. After the assessment the office offers a place, waitlists or declines. An offer is refused if the grade is already full, and the family accepts or declines online before the reply-by date. Every step writes to the family’s timeline and sends the matching email.</p>
   <h2>Content and sources</h2>
   <p>School facts, programmes, the 2026/27 fees and the 2026/27 calendar are taken from Hillel’s own published material (hillelacademyjm.com, the 2026–27 tuition schedules dated 1 April 2026 and the 2026–27 calendar). They are shown <b>as published by Hillel</b> and stay editable by the office. Seven photographs are the school’s own, used here for the concept, and one is a Creative Commons photograph of the Blue Mountains.</p>
-  <div class="note"><b>About the screenshots.</b> Names, applications, enquiries, vacancies, news stories and assessment or tour sessions in the following pages are <b>sample data</b> created for the demonstration. The logo mark is a placeholder until the school supplies its crest. The working demo can be shown live on a call.</div>
+  <div class="note"><b>About the screenshots.</b> Names, applications, enquiries, vacancies, news stories and assessment or tour sessions in the following pages are <b>sample data</b> created for the demonstration. The working demo can be shown live on a call.</div>
   ${foot()}
 </section>
 
@@ -414,7 +420,7 @@ ${sec.screens.map(s => screenPages(sec, s)).join('')}
   <p class="eyebrow">Timeline</p>
   <h1>Six weeks from approval to launch</h1>
   <div class="weeks">
-    <div class="week"><b>Week 1</b>Kick-off call, brand assets (crest, colours, photographs) and content.</div>
+    <div class="week"><b>Week 1</b>Kick-off call, brand assets (crest artwork, colours, photographs) and content.</div>
     <div class="week"><b>Week 2</b>Revision round 1. Forms, emails and staff roles configured with the school’s real addresses.</div>
     <div class="week"><b>Week 3</b>Data and content load: fees, calendar, capacity per grade, sessions, templates.</div>
     <div class="week"><b>Week 4</b>Revision round 2.</div>
@@ -424,7 +430,7 @@ ${sec.screens.map(s => screenPages(sec, s)).join('')}
   <p>The complete platform is on a private preview link throughout, and nothing goes live until the school approves it in writing. <b>Billing does not start until launch.</b></p>
   <h2>What we need from Hillel</h2>
   <ul class="tight">
-    <li>The school crest and any brand guidelines, and original photographs (the concept uses images from hillelacademyjm.com).</li>
+    <li>A vector or high-resolution copy of the crest (the concept uses the version on hillelacademyjm.com) and any brand guidelines, and original photographs (the concept uses images from hillelacademyjm.com).</li>
     <li>Confirmation of the facts we used: about 800 students from 40+ countries, the campus, programmes and accreditation wording.</li>
     <li>How the office runs admissions today: required documents by grade, assessment wording, seats per grade and entry years, and the offer reply window.</li>
     <li>The admissions mailbox and who receives office alerts; staff to set up as administrators, admissions or communications users.</li>

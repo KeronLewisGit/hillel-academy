@@ -22,7 +22,7 @@
         'telephone' => '+'.nanp_digits($phone),
         'email' => $admissionsEmail,
         'foundingDate' => (string) hillel('founded'),
-        'logo' => asset('favicon.svg'),
+        'logo' => asset('img/brand/hillel-crest.png'),
         'image' => asset('img/'.$ogImage.'-1920.webp'),
         'address' => array_filter(['@type' => 'PostalAddress', 'streetAddress' => $address['street'], 'addressLocality' => $address['city'], 'addressRegion' => $address['region'], 'addressCountry' => $address['country']]),
     ];

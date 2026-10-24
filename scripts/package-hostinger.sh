@@ -37,7 +37,7 @@ cp -R "$ROOT/public/img" "$STAGE/img"
 mkdir -p "$STAGE/uploads/news"
 cp "$ROOT/deploy/uploads.htaccess" "$STAGE/uploads/.htaccess"
 
-cp "$ROOT/public/favicon.svg" "$STAGE/favicon.svg"
+cp "$ROOT/public/favicon.ico" "$ROOT/public/favicon-64.png" "$ROOT/public/apple-touch-icon.png" "$STAGE/"
 cp "$ROOT/deploy/index.php" "$STAGE/index.php"
 cp "$ROOT/deploy/.htaccess" "$STAGE/.htaccess"
 cp "$ROOT/deploy/robots.txt" "$STAGE/robots.txt"

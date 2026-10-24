@@ -35,8 +35,8 @@
     --line-strong: #858fa3;   /* form borders: 3:1 on white and paper */
     --rule: #c9daf0;          /* the faint blue ruled lines */
     --margin: #d8604c;        /* the red margin line (decorative only) */
-    --link: #1d4a9a;
-    --focus: #1d4a9a;
+    --link: #0566a7;          /* the crest's royal blue: 5.8:1 on paper, 5.4:1 on sky */
+    --focus: #0566a7;
 
     --ink-950: #0b1428;
     --ink-900: #111d38;
@@ -50,7 +50,7 @@
     --primary-hover: #26396b;
     --primary-ink: #ffffff;
 
-    --series-1: #2a62c9;
+    --series-1: #0566a7;
     --series-track: #e3ebf7;
     --good: #12873a;
     --attention: #c98200;
@@ -374,11 +374,6 @@
 }
 
 /* Theme toggle icon swap */
-/* The logo tile is ink-900, which almost matches the dark header: lift it a step. */
-:root[data-theme='dark'] .logo-tile { fill: var(--ink-700); }
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .logo-tile { fill: var(--ink-700); }
-}
 .dark-show { display: none; }
 :root[data-theme='dark'] .dark-show { display: block; }
 :root[data-theme='dark'] .dark-hide { display: none; }
