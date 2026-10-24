@@ -32,12 +32,12 @@
         @php($row = collect($rows)->firstWhere('grade', $grade))
         <section id="wl-{{ $grade }}" class="a-card mt-4 overflow-hidden">
             <div class="flex flex-wrap items-center justify-between gap-2 p-5 pb-3"><h3 class="font-semibold">{{ grade_label($grade) }}</h3><span class="text-sm text-ink-2">{{ $row['left'] ?? 0 }} {{ \Illuminate\Support\Str::plural('seat', $row['left'] ?? 0) }} free</span></div>
-            <table class="data-table"><thead><tr><th class="r">#</th><th>Student</th><th>Waitlisted</th><th class="r">Action</th></tr></thead><tbody>
+            <div class="overflow-x-auto"><table class="data-table"><thead><tr><th class="r">#</th><th>Student</th><th>Waitlisted</th><th class="r">Action</th></tr></thead><tbody>
                 @foreach ($list as $i => $a)
                     <tr><td class="r num">{{ $i + 1 }}</td><td><a class="font-semibold hover:text-link" href="{{ route('admin.applications.show', $a) }}">{{ $a->student_name }}</a></td><td>{{ $a->waitlisted_at?->format('j M Y') }}</td>
                         <td class="r">@if ($loop->first && ($row['left'] ?? 0) > 0)<form method="POST" action="{{ route('admin.applications.status', $a) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="offered"><input type="hidden" name="note" value="Offered from the waiting list."><button class="a-btn a-btn-primary">Offer the free seat</button></form>@endif</td></tr>
                 @endforeach
-            </tbody></table>
+            </tbody></table></div>
         </section>
     @empty
         <p class="mt-3 text-ink-3">Nobody is waitlisted for {{ $year }}.</p>

@@ -1,6 +1,6 @@
 <x-layouts.admin title="Teacher applicants">
     <x-slot:actions>
-        <form method="GET" class="flex gap-2"><label for="job" class="sr-only">Vacancy</label><select id="job" name="job" class="a-input" onchange="this.form.submit()"><option value="">All vacancies</option>@foreach ($jobs as $j)<option value="{{ $j->id }}" @selected($job === $j->id)>{{ $j->title }}</option>@endforeach</select><noscript><button class="a-btn a-btn-ghost">Show</button></noscript></form>
+        <form method="GET" class="flex w-full gap-2 sm:w-auto"><label for="job" class="sr-only">Vacancy</label><select id="job" name="job" class="a-input w-full sm:w-auto" onchange="this.form.submit()"><option value="">All vacancies</option>@foreach ($jobs as $j)<option value="{{ $j->id }}" @selected($job === $j->id)>{{ $j->title }}</option>@endforeach</select><noscript><button class="a-btn a-btn-ghost">Show</button></noscript></form>
     </x-slot:actions>
     <nav class="tag-row mb-4" aria-label="Filter by status">
         <a class="tag" href="{{ request()->fullUrlWithQuery(['status' => null]) }}" @if(! $status) aria-current="true" @endif>All <span class="count">{{ $counts->sum() }}</span></a>

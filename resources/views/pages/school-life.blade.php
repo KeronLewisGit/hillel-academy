@@ -27,7 +27,7 @@
                 <h2 id="houses-title" class="display-2 mt-3">Four houses, one school</h2>
                 <ul class="prose-copy measure mt-5">@foreach (hillel('school_life.traditions') as $t)<li>{{ $t }}</li>@endforeach</ul>
             </div>
-            <ul class="grid grid-cols-2 gap-4">
+            <ul class="grid gap-4 min-[360px]:grid-cols-2">
                 @foreach (hillel('school_life.houses') as $h)
                     <li class="panel overflow-hidden"><span class="block h-3" style="background: {{ $h['hex'] }}" aria-hidden="true"></span><div class="p-5"><p class="font-display display-3">{{ $h['name'] }}</p><p class="text-ink-2">{{ $h['colour'] }} house</p></div></li>
                 @endforeach

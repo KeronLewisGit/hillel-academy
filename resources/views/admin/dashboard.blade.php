@@ -61,7 +61,7 @@
         @endforeach
     </section>
 
-    <div class="mt-5 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
+    <div class="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.5fr_1fr]">
         <section class="a-card flex flex-col p-5" aria-labelledby="weekly-title">
             <h2 id="weekly-title" class="font-semibold">Applications submitted per week</h2>
             <p class="text-sm text-ink-3">Last {{ $weekly->count() }} weeks · {{ number_format($weekly->sum('count')) }} total · {{ $drafts }} more started but not yet submitted</p>
