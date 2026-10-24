@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Family;
 
 use App\Enums\AdmissionStatus;
 use App\Http\Controllers\Controller;
-use App\Mail\FamilyLoginLink;
 use App\Models\Application;
 use App\Notifications\OfficeAlert;
 use App\Services\FamilyNotifier;
 use App\Support\Notify;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -81,7 +80,7 @@ class ApplicationFormController extends Controller
         $application->save();
 
         if ($later) {
-            return $this->emailLink($request, $application);
+            return $this->savedForLater($request);
         }
 
         return to_route('family.applications.step', [$application, $step + 1]);
@@ -110,21 +109,23 @@ class ApplicationFormController extends Controller
         return to_route('family.applications.show', $application)->with('submitted', $application->reference);
     }
 
-    /** "Save and finish later": a fresh sign-in link by email. */
-    public function emailLink(Request $request, Application $application): RedirectResponse
+    /**
+     * "Save and finish later": a fresh sign-in link by email, at most a few an hour
+     * (the same cap as the sign-in form), so the button can't flood an inbox.
+     */
+    private function savedForLater(Request $request): RedirectResponse
     {
-        $this->own($request, $application);
         $family = $this->family($request);
-        $url = $family->loginUrl();
-        try {
-            Mail::to($family->email)->send(new FamilyLoginLink($family->name, $url, newApplication: true));
-        } catch (\Throwable $e) {
-            report($e);
+        $key = 'family-later|'.$family->id;
+        if (RateLimiter::tooManyAttempts($key, 6)) {
+            return to_route('family.dashboard')->with('status', 'Your answers are saved. We have already emailed you a link recently, so please use that one to finish later.');
         }
+        RateLimiter::hit($key, 3600);
 
+        $link = $family->sendLoginLink(newApplication: true);
         $redirect = to_route('family.dashboard')->with('status', 'Your answers are saved. We have emailed a link to '.$family->email.' so you can finish later.');
-        if (hillel('demo_links')) {
-            $redirect->with('demo_link', $url);
+        if (demo_links()) {
+            $redirect->with('demo_link', $link['url']);
         }
 
         return $redirect;
@@ -156,13 +157,13 @@ class ApplicationFormController extends Controller
                 'guardian_name' => [$req, 'string', 'max:160'],
                 'guardian_relationship' => [$req, Rule::in(array_keys(self::RELATIONSHIPS))],
                 'guardian_email' => [$req, 'email:rfc', 'max:255'],
-                'guardian_phone' => [$req, 'string', 'max:40', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+                'guardian_phone' => [$req, 'string', 'max:40', self::PHONE_REGEX],
                 'guardian_address' => [$req, 'string', 'max:500'],
                 'guardian_occupation' => ['nullable', 'string', 'max:120'],
                 'guardian2_name' => ['nullable', 'string', 'max:160'],
                 'guardian2_relationship' => ['nullable', 'required_with:guardian2_name', Rule::in(array_keys(self::RELATIONSHIPS))],
                 'guardian2_email' => ['nullable', 'email:rfc', 'max:255'],
-                'guardian2_phone' => ['nullable', 'string', 'max:40', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+                'guardian2_phone' => ['nullable', 'string', 'max:40', self::PHONE_REGEX],
             ],
             3 => [
                 'previous_school' => ['nullable', 'string', 'max:160'],

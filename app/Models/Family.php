@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Mail\FamilyLoginLink;
 use Database\Factories\FamilyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+
+use function Illuminate\Support\defer;
 
 /**
  * A parent or guardian account for the family portal. There is no password: the
@@ -70,9 +74,40 @@ class Family extends Authenticatable
         return $plain;
     }
 
-    public function loginUrl(?string $next = null): string
+    public function loginUrl(): string
     {
-        return route('family.login.consume', array_filter(['token' => $this->issueLoginToken(), 'next' => $next]));
+        return route('family.login.consume', ['token' => $this->issueLoginToken()]);
+    }
+
+    /**
+     * Issue a fresh link and email it. With $afterResponse the email goes out once the
+     * response has been sent, so a sign-in request for a known address takes no longer
+     * than one for an unknown address. A failed send is reported, never thrown.
+     *
+     * @return array{url: string, sent: bool}
+     */
+    public function sendLoginLink(bool $newApplication = false, bool $afterResponse = false): array
+    {
+        $url = $this->loginUrl();
+        $send = function () use ($url, $newApplication): bool {
+            try {
+                Mail::to($this->email)->send(new FamilyLoginLink($this->name, $url, $newApplication));
+
+                return true;
+            } catch (\Throwable $e) {
+                report($e);
+
+                return false;
+            }
+        };
+
+        if ($afterResponse) {
+            defer(fn () => $send());
+
+            return ['url' => $url, 'sent' => true];
+        }
+
+        return ['url' => $url, 'sent' => $send()];
     }
 
     /** The family a link belongs to, if the link is real and unexpired. */

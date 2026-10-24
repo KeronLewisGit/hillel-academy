@@ -1,5 +1,5 @@
 <x-layouts.site title="Book a campus visit" description="Book a campus tour of Hillel Academy, Upper Mark Way, Kingston 8.">
-    <x-page-header title="Come and see Hillel" note="Campus visits" lead="The best way to know a school is to walk through it. Choose a tour time below and a member of the Admissions team will show you around." photo="campus-buildings" alt="" />
+    <x-page-header title="Come and see Hillel" note="Campus visits" lead="The best way to know a school is to walk through it. Choose a tour time below and a member of the Admissions team will show you around." photo="{{ hillel('visit_photo') }}" alt="" />
     <section class="wrap mt-12 grid gap-12 md:mt-16 lg:grid-cols-[1.3fr_1fr]">
         @if ($slots->isEmpty())
             <div class="panel tabbed p-6 sm:p-8">

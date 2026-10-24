@@ -1,5 +1,5 @@
 <x-layouts.admin title="Settings & fees">
-    <div class="grid gap-5 xl:grid-cols-2">
+    <div class="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <form method="POST" action="{{ route('admin.settings.update') }}" class="a-card grid content-start gap-3 p-5">@csrf @method('PUT')
             <h2 class="font-semibold">Contact details</h2>
             @foreach (['phone_main' => 'Main office phone', 'phone_admissions' => 'Admissions phone', 'email_admissions' => 'Admissions email', 'email_careers' => 'Careers email (optional)', 'office_hours' => 'Office hours (optional)'] as $k => $label)
@@ -22,7 +22,7 @@
             <p class="mt-1 text-sm text-ink-2">Shown on the Admissions page. Tuition per term, in whole dollars: Jamaican students in J$, international students in US$.</p>
             <div class="mt-4 grid gap-3">
                 @foreach ($fees as $fee)
-                    <form method="POST" action="{{ route('admin.settings.fees.update', $fee) }}" class="grid gap-2 rounded-lg border border-line p-3 sm:grid-cols-[1fr_1fr_8rem_6rem_4rem]">@csrf @method('PUT')
+                    <form method="POST" action="{{ route('admin.settings.fees.update', $fee) }}" class="grid gap-2 rounded-lg border border-line p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,8rem)_minmax(0,6rem)_minmax(0,4.5rem)] [&>input]:min-w-0">@csrf @method('PUT')
                         <label class="sr-only" for="fl-{{ $fee->id }}">Label</label><input id="fl-{{ $fee->id }}" name="label" class="a-input" value="{{ $fee->label }}" required>
                         <label class="sr-only" for="fg-{{ $fee->id }}">Grades</label><input id="fg-{{ $fee->id }}" name="grades" class="a-input" value="{{ $fee->grades }}" placeholder="Grades">
                         <label class="sr-only" for="fj-{{ $fee->id }}">J$ per term</label><input id="fj-{{ $fee->id }}" type="number" name="amount_jmd" class="a-input num" value="{{ $fee->amount_jmd }}" placeholder="J$">
@@ -31,10 +31,10 @@
                         <label class="sr-only" for="fn-{{ $fee->id }}">Note</label><input id="fn-{{ $fee->id }}" name="note" class="a-input sm:col-span-4" value="{{ $fee->note }}" placeholder="Note (optional)">
                         <span class="flex gap-1"><button class="a-btn a-btn-ghost flex-1 px-2">Save</button></span>
                     </form>
-                    <form method="POST" action="{{ route('admin.settings.fees.destroy', $fee) }}" class="-mt-2 text-right" onsubmit="return confirm('Remove this fee row?')">@csrf @method('DELETE')<button class="text-sm text-[color:var(--critical-text)] underline">Remove “{{ $fee->label }}”</button></form>
+                    <form method="POST" action="{{ route('admin.settings.fees.destroy', $fee) }}" class="-mt-2 text-right" onsubmit="return confirm('Remove this fee row?')">@csrf @method('DELETE')<button class="inline-flex min-h-11 items-center text-sm text-[color:var(--critical-text)] underline">Remove “{{ $fee->label }}”</button></form>
                 @endforeach
             </div>
-            <form method="POST" action="{{ route('admin.settings.fees.store') }}" class="mt-5 grid gap-2 rounded-lg bg-surface-2 p-3 sm:grid-cols-[1fr_1fr_8rem_6rem]">@csrf
+            <form method="POST" action="{{ route('admin.settings.fees.store') }}" class="mt-5 grid gap-2 rounded-lg bg-surface-2 p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,8rem)_minmax(0,6rem)] [&>input]:min-w-0">@csrf
                 <p class="text-sm font-semibold sm:col-span-4">Add a row</p>
                 <label class="sr-only" for="nl">Label</label><input id="nl" name="label" class="a-input" placeholder="e.g. Grades 1–6" required>
                 <label class="sr-only" for="ng">Grades</label><input id="ng" name="grades" class="a-input" placeholder="Grades covered">

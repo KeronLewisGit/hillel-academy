@@ -10,6 +10,18 @@ if (! function_exists('hillel')) {
     }
 }
 
+if (! function_exists('demo_links')) {
+    /**
+     * Whether sign-in links are also shown on screen (demos without email). Never in
+     * production, whatever HILLEL_DEMO_LINKS says: on a live site it would let anyone
+     * sign in as any family by typing their email address.
+     */
+    function demo_links(): bool
+    {
+        return (bool) config('hillel.demo_links') && ! app()->isProduction();
+    }
+}
+
 if (! function_exists('setting')) {
     /** Office-editable value from the settings table, falling back to config('hillel.settings'). */
     function setting(string $key, mixed $default = null): mixed
@@ -89,13 +101,6 @@ if (! function_exists('tel_href')) {
         $digits = nanp_digits($number);
 
         return $digits ? 'tel:+'.$digits : 'tel:'.preg_replace('/[^\d+]/', '', (string) $number);
-    }
-}
-
-if (! function_exists('sms_href')) {
-    function sms_href(?string $number): string
-    {
-        return 'sms:+'.(nanp_digits($number) ?? preg_replace('/\D+/', '', (string) $number));
     }
 }
 

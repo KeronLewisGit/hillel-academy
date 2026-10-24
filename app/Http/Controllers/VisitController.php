@@ -34,7 +34,7 @@ class VisitController extends Controller
             'tour_slot_id' => ['required', 'integer'],
             'name' => ['required', 'string', 'max:160'],
             'email' => ['required', 'email:rfc', 'max:255'],
-            'phone' => ['required', 'string', 'max:40', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['required', 'string', 'max:40', self::PHONE_REGEX],
             'party_size' => ['required', 'integer', 'min:1', 'max:6'],
             'child_name' => ['nullable', 'string', 'max:120'],
             'grade' => ['nullable', Rule::in(array_keys(grades()))],

@@ -53,6 +53,7 @@ class AssessmentSlot extends Model
     public function scopeBookableFor(Builder $query, string $grade): void
     {
         $query->where('starts_at', '>', now()->addHours(self::LEAD_HOURS))
+            ->where(fn (Builder $g) => $g->whereNull('grades')->orWhereJsonContains('grades', $grade))
             ->withCount('bookings')
             ->orderBy('starts_at');
     }

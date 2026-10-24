@@ -29,7 +29,7 @@ class EnquiryController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:160'],
             'email' => ['required', 'email:rfc', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:40', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['nullable', 'string', 'max:40', self::PHONE_REGEX],
             'child_name' => ['nullable', 'string', 'max:120'],
             'grade' => [$kind === EnquiryKind::Admissions ? 'required' : 'nullable', Rule::in(array_keys(grades()))],
             'entry_year' => [$kind === EnquiryKind::Admissions ? 'required' : 'nullable', Rule::in(entry_years())],

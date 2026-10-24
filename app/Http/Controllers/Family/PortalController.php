@@ -57,7 +57,7 @@ class PortalController extends Controller
         $application->load('documents', 'assessmentSlot');
 
         $slots = $application->canBookAssessment()
-            ? AssessmentSlot::bookableFor($application->grade)->limit(40)->get()->filter(fn (AssessmentSlot $s) => $s->isBookableFor($application->grade))->values()
+            ? AssessmentSlot::bookableFor($application->grade)->limit(40)->get()->filter(fn (AssessmentSlot $s) => $s->seatsLeft() > 0)->values()
             : collect();
 
         return view('family.application', [

@@ -21,7 +21,7 @@
         <ol class="mt-10 grid gap-x-6 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
             @foreach (hillel('process') as $step)
                 <li class="relative pl-14">
-                    <span class="font-display absolute left-0 top-0 grid h-10 w-10 place-items-center rounded-full bg-navy-900 text-lg text-white" aria-hidden="true">{{ $loop->iteration }}</span>
+                    <span class="font-display absolute left-0 top-0 grid h-10 w-10 place-items-center rounded-full bg-ink-900 text-lg text-white" aria-hidden="true">{{ $loop->iteration }}</span>
                     <h3 class="display-4">{{ $step['title'] }}</h3>
                     <p class="mt-1.5 text-ink-2">{{ $step['text'] }}</p>
                 </li>
@@ -44,16 +44,16 @@
             <h2 id="entry-title" class="display-2 mt-3">Which grade?</h2>
             <p class="lead mt-4 text-ink-2">The Prep School takes children aged 3 to 11 and the High School students aged 11 to 19. A guide to where children usually start:</p>
             <div class="mt-8 overflow-x-auto rounded-xl border border-line bg-surface">
-                <table class="w-full min-w-[34rem] text-left">
+                <table class="w-full text-left">
                     <caption class="sr-only">Grades, school sections and typical ages</caption>
-                    <thead class="bg-surface-2 text-sm text-ink-2"><tr><th scope="col" class="px-5 py-3 font-semibold">Section</th><th scope="col" class="px-5 py-3 font-semibold">Grade</th><th scope="col" class="px-5 py-3 font-semibold">Age by 31 August of the year they start</th></tr></thead>
+                    <thead class="bg-surface-2 text-sm text-ink-2"><tr><th scope="col" class="px-3 py-3 sm:px-5 font-semibold">Section</th><th scope="col" class="px-3 py-3 sm:px-5 font-semibold">Grade</th><th scope="col" class="px-3 py-3 sm:px-5 font-semibold">Age by 31 August of the year they start</th></tr></thead>
                     <tbody>
                         @foreach ($bySection as $section => $grades)
                             @foreach ($grades as $key => $g)
                                 <tr class="border-t border-line">
-                                    @if ($loop->first)<th scope="rowgroup" rowspan="{{ count($grades) }}" class="px-5 py-3 align-top font-display text-lg font-normal">{{ hillel('sections.'.$section.'.name') }}</th>@endif
-                                    <td class="px-5 py-3 font-semibold">{{ $g['label'] }}</td>
-                                    <td class="num px-5 py-3 text-ink-2">{{ $g['age'] }}</td>
+                                    @if ($loop->first)<th scope="rowgroup" rowspan="{{ count($grades) }}" class="px-3 py-3 sm:px-5 align-top font-display text-lg font-normal">{{ hillel('sections.'.$section.'.name') }}</th>@endif
+                                    <td class="whitespace-nowrap px-3 py-3 font-semibold sm:px-5">{{ $g['label'] }}</td>
+                                    <td class="num px-3 py-3 sm:px-5 text-ink-2">{{ $g['age'] }}</td>
                                 </tr>
                             @endforeach
                         @endforeach
@@ -114,7 +114,7 @@
     </section>
 
     <section class="wrap mt-20">
-        <div class="on-dark ruled rounded-2xl bg-navy-900 p-8 text-white sm:p-12">
+        <div class="on-dark ruled rounded-2xl bg-ink-900 p-8 text-white sm:p-12">
             <h2 class="display-2">Ready when you are</h2>
             <p class="lead mt-4 text-white/85">Start online now, or talk to a person first: {{ format_phone(setting('phone_admissions')) }} · {{ setting('email_admissions') }}</p>
             <div class="mt-8 flex flex-wrap gap-3"><a href="{{ route('apply') }}" class="btn btn-accent">Start an application</a><a href="{{ route('enquire') }}" class="btn btn-on-dark">Ask a question</a><a href="{{ route('family.login') }}" class="btn btn-on-dark">Family portal</a></div>

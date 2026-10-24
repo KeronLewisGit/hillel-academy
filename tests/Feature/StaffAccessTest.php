@@ -54,6 +54,8 @@ class StaffAccessTest extends TestCase
         foreach ([route('admin.settings.edit'), route('admin.users.index'), route('admin.jobs.index'), route('admin.teachers.index')] as $url) {
             $this->get($url)->assertForbidden();
         }
+        // The refusal is the school's own branded page, with the reason.
+        $this->get(route('admin.settings.edit'))->assertForbidden()->assertSee('Not available')->assertSee('Your account does not have access to this area.')->assertSee('Home page');
     }
 
     public function test_admin_reaches_everything(): void

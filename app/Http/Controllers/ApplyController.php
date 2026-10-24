@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\AdmissionStatus;
-use App\Mail\FamilyLoginLink;
 use App\Models\Application;
 use App\Models\Family;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -61,16 +59,12 @@ class ApplyController extends Controller
             'guardian_email' => $family->wasRecentlyCreated ? $email : null,
         ]);
 
-        $url = $family->loginUrl();
-        try {
-            Mail::to($family->email)->send(new FamilyLoginLink($family->name, $url, newApplication: true));
-        } catch (\Throwable $e) {
-            report($e); // the family can ask for a fresh link from /family/login
-        }
+        // A failed send is reported; the family can ask for a fresh link from /family/login.
+        $link = $family->sendLoginLink(newApplication: true);
 
         $request->session()->put('check_email', $email);
-        if (hillel('demo_links')) {
-            $request->session()->flash('demo_link', $url);
+        if (demo_links()) {
+            $request->session()->flash('demo_link', $link['url']);
         }
 
         return to_route('apply.check-email');

@@ -42,7 +42,7 @@
     <a href="#content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-3">Skip to content</a>
 
     <div class="fixed inset-0 z-30 bg-black/40 lg:hidden" style="display:none" x-show="nav" x-transition.opacity @click="nav = false"></div>
-    <aside class="on-dark fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col overflow-y-auto bg-navy-950 transition-transform lg:translate-x-0" :class="nav && 'translate-x-0'" aria-label="Dashboard">
+    <aside class="on-dark fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col overflow-y-auto bg-ink-950 transition-transform lg:translate-x-0" :class="nav && 'translate-x-0'" aria-label="Dashboard">
         <a href="{{ route('admin.dashboard') }}" class="flex h-16 flex-none items-center px-5"><x-logo tone="light" /></a>
         <nav class="admin-nav flex-1 px-3 pb-4">
             @foreach ($groups as $group => $items)

@@ -15,9 +15,9 @@
                             <th scope="row" class="!static !border-b !border-line !bg-transparent !text-sm !normal-case !tracking-normal !text-ink">{{ $r['label'] }}<span class="block text-xs font-normal text-ink-3">{{ hillel('sections.'.$r['section'].'.name') }}</span></th>
                             <td class="r"><label class="sr-only" for="seats-{{ $r['grade'] }}">Seats for {{ $r['label'] }}</label><input id="seats-{{ $r['grade'] }}" type="number" min="0" max="500" name="seats[{{ $r['grade'] }}]" value="{{ $r['seats'] }}" class="a-input num w-20 text-right"></td>
                             <td class="min-w-36"><div class="meter" data-full="{{ $full ? 'true' : 'false' }}" role="img" aria-label="{{ $r['held'] }} of {{ $r['seats'] }} seats held"><span style="width: {{ $r['seats'] ? min(100, $r['held'] / $r['seats'] * 100) : 0 }}%"></span></div><span class="num text-xs text-ink-3">{{ $r['held'] }} / {{ $r['seats'] }}</span></td>
-                            <td class="r">{{ $r['offered'] }}</td><td class="r">{{ $r['accepted'] }}</td><td class="r">{{ $r['enrolled'] }}</td>
+                            <td class="r">{{ $r['offered'] }}@if ($r['expired'])<span class="block text-xs text-ink-3">+{{ $r['expired'] }} expired</span>@endif</td><td class="r">{{ $r['accepted'] }}</td><td class="r">{{ $r['enrolled'] }}</td>
                             <td class="r">@if ($full)<x-chip tone="attention" icon="alert">Full</x-chip>@else{{ $r['left'] }}@endif</td>
-                            <td class="r"><a class="text-link underline" href="{{ route('admin.applications.index', ['grade' => $r['grade'], 'year' => $year]) }}">{{ $r['in_pipeline'] }}</a></td>
+                            <td class="r"><a class="inline-flex min-h-11 min-w-11 items-center justify-end text-link underline" href="{{ route('admin.applications.index', ['grade' => $r['grade'], 'year' => $year]) }}">{{ $r['in_pipeline'] }}</a></td>
                             <td>@if ($r['waitlist'])<a class="text-link underline" href="#wl-{{ $r['grade'] }}">{{ $r['waitlist'] }} waiting</a>@else<span class="text-ink-3">–</span>@endif</td>
                         </tr>
                     @endforeach

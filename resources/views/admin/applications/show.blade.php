@@ -27,8 +27,8 @@
         @if ($position)<x-chip tone="neutral" icon="clock">Waitlist position {{ $position }}</x-chip>@endif
     </div>
 
-    <div class="grid gap-5 xl:grid-cols-[1.55fr_1fr]">
-        <div class="grid content-start gap-5">
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]">
+        <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-5">
             {{-- Documents first: reviewing them is the job that unblocks everything else --}}
             <section id="documents" class="a-card p-5" aria-labelledby="docs-title">
                 <h2 id="docs-title" class="font-semibold">Documents</h2>
@@ -99,11 +99,11 @@
             </section>
         </div>
 
-        <div class="grid content-start gap-5">
+        <div class="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-5">
             <section class="a-card tabbed p-5" aria-labelledby="decision-title">
                 <h2 id="decision-title" class="font-semibold">Next step</h2>
                 <p class="mt-1 text-sm text-ink-2">{{ $a->grade_label }} {{ $a->entry_year }}: <strong>{{ $seatsLeft }}</strong> of {{ $seats }} {{ \Illuminate\Support\Str::plural('seat', $seats) }} free. <a class="text-link underline" href="{{ route('admin.capacity.index', ['year' => $a->entry_year]) }}">Capacity</a></p>
-                @if ($a->status === S::Offered && $a->offer_expires_at)<p class="mt-1 text-sm">Offer open until <strong>{{ $a->offer_expires_at->format('j M Y') }}</strong>.</p>@endif
+                @if ($a->status === S::Offered && $a->offer_expires_at)<p class="mt-1 text-sm">@if ($a->offerIsOpen())Offer open until <strong>{{ $a->offer_expires_at->format('j M Y') }}</strong>.@else<strong>Offer expired on {{ $a->offer_expires_at->format('j M Y') }}</strong>; its seat has gone back to the grade.@endif</p>@endif
                 @if ($next)
                     <form method="POST" action="{{ route('admin.applications.status', $a) }}" class="mt-4 grid gap-3">@csrf @method('PATCH')
                         <label for="decision-note" class="text-sm font-medium">Note for the timeline <span class="font-normal text-ink-3">(optional, staff only)</span></label>
@@ -154,7 +154,7 @@
                 <h2 id="msg-title" class="font-semibold">Email the family</h2>
                 <form method="POST" action="{{ route('admin.applications.message', $a) }}" class="mt-3 grid gap-3">@csrf
                     <label for="tpl" class="text-sm font-medium">Start from a template</label>
-                    <select id="tpl" class="a-input" x-model="choice" @change="pick()"><option value="">Blank message</option>@foreach ($templates as $t)<option value="{{ $t->id }}">{{ $t->name }}</option>@endforeach</select>
+                    <select id="tpl" class="a-input w-full min-w-0" x-model="choice" @change="pick()"><option value="">Blank message</option>@foreach ($templates as $t)<option value="{{ $t->id }}">{{ $t->name }}</option>@endforeach</select>
                     <label for="subject" class="text-sm font-medium">Subject</label>
                     <input id="subject" name="subject" class="a-input" x-model="subject" required>
                     <label for="body" class="text-sm font-medium">Message</label>

@@ -49,7 +49,7 @@
         <script type="application/ld+json">{!! json_encode($ld, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
     @endforeach
 </head>
-<body class="min-h-screen {{ $mobileBar ? 'pb-24 lg:pb-0' : '' }}" x-data="{ menu: false }" @keydown.escape.window="menu = false">
+<body class="min-h-screen" x-data="{ menu: false }" @keydown.escape.window="menu = false">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-surface focus:px-4 focus:py-3 focus:shadow-md">Skip to content</a>
 
     @if (hillel('preview'))
@@ -59,7 +59,7 @@
     @endif
 
     {{-- Utility strip: the two things parents look for first. --}}
-    <div class="hidden bg-navy-950 text-sm text-white/80 md:block">
+    <div class="hidden bg-ink-950 text-sm text-white/80 md:block">
         <div class="wrap flex h-10 items-center gap-6">
             <a class="inline-flex items-center gap-1.5 hover:text-white" href="{{ tel_href($admissionsPhone) }}"><x-icon name="phone" class="h-3.5 w-3.5" />Admissions {{ format_phone($admissionsPhone) }}</a>
             <a class="inline-flex items-center gap-1.5 hover:text-white" href="mailto:{{ $admissionsEmail }}"><x-icon name="mail" class="h-3.5 w-3.5" />{{ $admissionsEmail }}</a>
@@ -120,7 +120,8 @@
         {{ $slot }}
     </main>
 
-    <footer class="on-dark ruled mt-24 bg-navy-950 text-white/80">
+    {{-- With the phone action bar, the footer itself pads below so the navy runs behind the bar. --}}
+    <footer class="on-dark ruled mt-24 bg-ink-950 text-white/80 {{ $mobileBar ? 'pb-20 lg:pb-0' : '' }}">
         <div class="h-1.5 bg-accent" aria-hidden="true"></div>
         <div class="wrap grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
             <div>

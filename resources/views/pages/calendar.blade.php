@@ -14,7 +14,7 @@
                     <li class="panel grid gap-3 p-5 sm:grid-cols-[5rem_1fr_auto] sm:items-start">
                         <span class="grid w-16 place-items-center rounded-lg bg-sky py-2 text-center leading-none"><span class="text-xs font-bold uppercase tracking-wider text-ink-2">{{ $e->starts_at->format('D') }}</span><span class="font-display text-3xl">{{ $e->starts_at->format('j') }}</span></span>
                         <span><span class="display-4 block">{{ $e->title }}</span><span class="block text-ink-2">{{ $e->whenLabel() }}@if ($e->location) · {{ $e->location }}@endif</span>@if ($e->description)<span class="measure mt-2 block text-ink-2">{{ $e->description }}</span>@endif</span>
-                        <x-chip tone="neutral" :icon="$e->category === \App\Enums\EventCategory::Admissions ? 'cap' : 'calendar'">{{ $e->category->label() }}</x-chip>
+                        <x-chip tone="neutral" class="justify-self-start" :icon="$e->category === \App\Enums\EventCategory::Admissions ? 'cap' : 'calendar'">{{ $e->category->label() }}</x-chip>
                     </li>
                 @endforeach
             </ul>

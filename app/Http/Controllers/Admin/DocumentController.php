@@ -19,7 +19,7 @@ class DocumentController extends Controller
         abort_unless(Storage::disk('local')->exists($document->path), 404);
 
         // Shown inline so staff can read a scan without saving it to the office PC.
-        return Storage::disk('local')->response($document->path, $document->original_name, ['Content-Disposition' => 'inline; filename="'.addslashes($document->original_name).'"']);
+        return Storage::disk('local')->response($document->path, $document->original_name);
     }
 
     public function update(Request $request, ApplicationDocument $document, Admissions $admissions): RedirectResponse

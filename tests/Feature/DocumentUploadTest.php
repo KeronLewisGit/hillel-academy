@@ -7,6 +7,7 @@ use App\Enums\DocumentType;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\Family;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -91,6 +92,19 @@ class DocumentUploadTest extends TestCase
         $this->upload(UploadedFile::fake()->create('birth.pdf', 10, 'application/pdf'));
         $doc = $this->application->documents()->first();
         $this->get(route('family.documents.show', [$this->application, $doc]))->assertOk()->assertDownload('birth.pdf');
+    }
+
+    public function test_staff_open_a_document_inline_with_an_encoded_file_name(): void
+    {
+        $this->upload(UploadedFile::fake()->create('Acta de nacimiento – José.pdf', 10, 'application/pdf'));
+        $doc = $this->application->documents()->first();
+
+        $disposition = (string) $this->actingAs(User::factory()->create(['role' => 'admissions']), 'web')
+            ->get(route('admin.documents.show', $doc))->assertOk()->headers->get('Content-Disposition');
+
+        $this->assertStringStartsWith('inline;', $disposition);
+        $this->assertStringContainsString("filename*=utf-8''Acta%20de%20nacimiento%20%E2%80%93%20Jos%C3%A9.pdf", $disposition);
+        $this->assertTrue(mb_check_encoding($disposition, 'ASCII'), 'the header itself stays plain ASCII');
     }
 
     public function test_uploads_close_once_an_application_is_finished(): void

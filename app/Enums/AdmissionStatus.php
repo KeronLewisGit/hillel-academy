@@ -108,12 +108,6 @@ enum AdmissionStatus: string
         return in_array($this, self::seatHolding(), true);
     }
 
-    /** Submitted and still moving: not decided, not closed. */
-    public function isActive(): bool
-    {
-        return in_array($this, [self::Submitted, self::DocsComplete, self::AssessmentBooked, self::Assessed, self::Waitlisted, self::Offered, self::Accepted], true);
-    }
-
     /**
      * The family-facing milestones on the portal tracker.
      *

@@ -208,6 +208,12 @@ class Application extends Model
         return $this->status === AdmissionStatus::Offered && (! $this->offer_expires_at || $this->offer_expires_at->isFuture());
     }
 
+    /** Offers out (until they expire), accepted and enrolled places use up a seat. */
+    public function holdsSeat(): bool
+    {
+        return $this->status === AdmissionStatus::Offered ? $this->offerIsOpen() : $this->status->holdsSeat();
+    }
+
     /** Families may upload while the school is still collecting paperwork. */
     public function acceptsUploads(): bool
     {
@@ -263,6 +269,19 @@ class Application extends Model
             ->where(fn (Builder $q) => $q->where('waitlisted_at', '<', $this->waitlisted_at)
                 ->orWhere(fn (Builder $w) => $w->where('waitlisted_at', $this->waitlisted_at)->where('id', '<', $this->id)))
             ->count() + 1;
+    }
+
+    /**
+     * Applications using up a seat: see holdsSeat(). An offer past its reply-by date
+     * gives the seat back, so expired offers never block the grade.
+     *
+     * @param  Builder<self>  $query
+     */
+    public function scopeHoldingSeat(Builder $query): void
+    {
+        $query->where(fn (Builder $q) => $q->whereIn('status', [AdmissionStatus::Accepted, AdmissionStatus::Enrolled])
+            ->orWhere(fn (Builder $o) => $o->where('status', AdmissionStatus::Offered)
+                ->where(fn (Builder $e) => $e->whereNull('offer_expires_at')->orWhere('offer_expires_at', '>', now()))));
     }
 
     /** @param Builder<self> $query */

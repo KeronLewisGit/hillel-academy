@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\AdmissionStatus;
 use App\Http\Controllers\Controller;
-use App\Mail\FamilyLoginLink;
 use App\Models\Application;
 use App\Models\AssessmentSlot;
 use App\Models\MessageTemplate;
@@ -14,7 +13,6 @@ use App\Services\FamilyNotifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -67,7 +65,7 @@ class ApplicationController extends Controller
             'seatsLeft' => $admissions->seatsLeft($application->entry_year, $application->grade),
             'seats' => $admissions->seats($application->entry_year, $application->grade),
             'position' => $application->waitlistPosition(),
-            'slots' => AssessmentSlot::bookableFor($application->grade)->limit(30)->get()->filter(fn (AssessmentSlot $s) => $s->suits($application->grade))->values(),
+            'slots' => AssessmentSlot::bookableFor($application->grade)->limit(30)->get(),
             'templates' => MessageTemplate::orderByRaw('key is not null')->orderBy('name')->get(),
             'staff' => User::where('active', true)->orderBy('name')->get(['id', 'name']),
         ]);
@@ -147,15 +145,10 @@ class ApplicationController extends Controller
     public function invite(Application $application): RedirectResponse
     {
         $family = $application->family;
-        try {
-            Mail::to($family->email)->send(new FamilyLoginLink($family->name, $family->loginUrl()));
-        } catch (\Throwable $e) {
-            report($e);
 
-            return back()->with('status', 'The link could not be emailed. Check the mail settings.');
-        }
-
-        return back()->with('status', 'Portal link emailed to '.$family->email.'.');
+        return back()->with('status', $family->sendLoginLink()['sent']
+            ? 'Portal link emailed to '.$family->email.'.'
+            : 'The link could not be emailed. Check the mail settings.');
     }
 
     public function export(Request $request): StreamedResponse

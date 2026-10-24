@@ -44,7 +44,7 @@ class CareerController extends Controller
             'first_name' => ['required', 'string', 'max:80'],
             'last_name' => ['required', 'string', 'max:80'],
             'email' => ['required', 'email:rfc', 'max:255'],
-            'phone' => ['required', 'string', 'max:40', 'regex:/^(?:\D*\d){7,15}\D*$/'],
+            'phone' => ['required', 'string', 'max:40', self::PHONE_REGEX],
             'country' => ['required', 'string', 'max:80'],
             'current_position' => ['nullable', 'string', 'max:160'],
             'subjects' => ['required', 'string', 'max:200'],

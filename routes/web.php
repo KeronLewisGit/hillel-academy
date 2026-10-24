@@ -52,7 +52,8 @@ Route::prefix('family')->name('family.')->group(function () {
         Route::post('/login', [Family\LoginController::class, 'send'])->middleware('throttle:family-link')->name('login.send');
         Route::get('/login/sent', [Family\LoginController::class, 'sent'])->name('login.sent');
     });
-    Route::get('/login/{token}', [Family\LoginController::class, 'consume'])->middleware('throttle:family-consume')->name('login.consume');
+    Route::get('/login/{token}', [Family\LoginController::class, 'confirm'])->middleware('throttle:family-consume')->name('login.consume');
+    Route::post('/login/{token}', [Family\LoginController::class, 'consume'])->middleware('throttle:family-consume')->name('login.confirm');
 
     Route::middleware('auth:family')->group(function () {
         Route::post('/logout', [Family\LoginController::class, 'logout'])->name('logout');
@@ -62,7 +63,6 @@ Route::prefix('family')->name('family.')->group(function () {
         Route::get('/applications/{application}/step/{step}', [Family\ApplicationFormController::class, 'edit'])->whereNumber('step')->name('applications.step');
         Route::post('/applications/{application}/step/{step}', [Family\ApplicationFormController::class, 'update'])->whereNumber('step')->name('applications.step.save');
         Route::post('/applications/{application}/submit', [Family\ApplicationFormController::class, 'submit'])->name('applications.submit');
-        Route::post('/applications/{application}/email-link', [Family\ApplicationFormController::class, 'emailLink'])->middleware('throttle:family-link')->name('applications.email-link');
         Route::post('/applications/{application}/documents', [Family\DocumentController::class, 'store'])->name('documents.store');
         Route::get('/applications/{application}/documents/{document}', [Family\DocumentController::class, 'show'])->name('documents.show');
         Route::delete('/applications/{application}/documents/{document}', [Family\DocumentController::class, 'destroy'])->name('documents.destroy');
@@ -129,6 +129,6 @@ Route::middleware(['auth:web', 'active'])->prefix('admin')->name('admin.')->grou
         Route::post('/settings/fees', [Admin\SettingsController::class, 'storeFee'])->name('settings.fees.store');
         Route::put('/settings/fees/{fee}', [Admin\SettingsController::class, 'updateFee'])->name('settings.fees.update');
         Route::delete('/settings/fees/{fee}', [Admin\SettingsController::class, 'destroyFee'])->name('settings.fees.destroy');
-        Route::resource('users', Admin\UserController::class)->except('show');
+        Route::resource('users', Admin\UserController::class)->except('show', 'destroy');
     });
 });

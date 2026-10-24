@@ -85,17 +85,35 @@ class FamilyApplyTest extends TestCase
         Application::factory()->submitted()->for($family)->create();
         $url = $this->linkFor($family);
 
-        $this->get($url)->assertRedirect(route('family.dashboard'));
+        $this->post($url)->assertRedirect(route('family.dashboard'));
         $this->assertAuthenticatedAs($family, 'family');
 
         auth('family')->logout();
         $this->get($url)->assertRedirect(route('family.login'));
+        $this->post($url)->assertRedirect(route('family.login'));
         $this->assertGuest('family');
 
         $expired = $this->linkFor($family);
         $this->travel(Family::LINK_MINUTES + 1)->minutes();
-        $this->get($expired)->assertRedirect(route('family.login'));
+        $this->post($expired)->assertRedirect(route('family.login'));
         $this->assertGuest('family');
+    }
+
+    public function test_opening_the_link_only_shows_a_confirm_button_so_email_scanners_cannot_use_it_up(): void
+    {
+        $family = Family::factory()->create();
+        Application::factory()->submitted()->for($family)->create();
+        $url = $this->linkFor($family);
+
+        // A link scanner (or the parent) opening the link twice signs nobody in and burns nothing.
+        $this->get($url)->assertOk()->assertSee('Continue to the family portal')->assertSee('action="'.$url.'"', false);
+        $this->get($url)->assertOk();
+        $this->assertGuest('family');
+        $this->assertNotNull($family->fresh()->login_token);
+
+        $this->post($url)->assertRedirect(route('family.dashboard'));
+        $this->assertAuthenticatedAs($family, 'family');
+        $this->assertNull($family->fresh()->login_token);
     }
 
     public function test_tampered_or_garbage_tokens_are_rejected(): void
@@ -104,6 +122,7 @@ class FamilyApplyTest extends TestCase
         $family->issueLoginToken();
 
         $this->get('/family/login/'.str_repeat('a', 48))->assertRedirect(route('family.login'));
+        $this->post('/family/login/'.str_repeat('a', 48))->assertRedirect(route('family.login'));
         $this->get('/family/login/short')->assertRedirect(route('family.login'));
         $this->assertGuest('family');
         $this->assertNotNull($family->fresh()->login_token, 'only the hash is stored');
@@ -115,7 +134,7 @@ class FamilyApplyTest extends TestCase
         $family = Family::factory()->create();
         $draft = Application::factory()->for($family)->create(['step' => 3]);
 
-        $this->get($this->linkFor($family))->assertRedirect(route('family.applications.step', [$draft, 3]));
+        $this->post($this->linkFor($family))->assertRedirect(route('family.applications.step', [$draft, 3]));
     }
 
     public function test_full_five_step_application_and_submission(): void
@@ -196,6 +215,33 @@ class FamilyApplyTest extends TestCase
         config(['hillel.demo_links' => true]);
         $this->start();
         $this->get(route('apply.check-email'))->assertSee('Demo mode')->assertSee('/family/login/', false);
+    }
+
+    public function test_demo_links_are_never_shown_in_production_even_if_switched_on(): void
+    {
+        Mail::fake();
+        config(['hillel.demo_links' => true]);
+        $this->app->detectEnvironment(fn () => 'production');
+        Family::factory()->create(['email' => 'known@example.com']);
+
+        $this->post('/family/login', ['email' => 'known@example.com'])->assertSessionMissing('demo_link');
+        $this->get(route('family.login.sent'))->assertOk()->assertDontSee('Demo mode');
+        $this->assertFalse(demo_links());
+    }
+
+    public function test_save_and_finish_later_stops_emailing_after_a_few_links_an_hour(): void
+    {
+        Mail::fake();
+        $family = Family::factory()->create();
+        $app = Application::factory()->for($family)->create(['step' => 2]);
+        $this->actingAs($family, 'family');
+
+        foreach (range(1, 8) as $i) {
+            $this->post(route('family.applications.step.save', [$app, 2]), ['action' => 'later', 'guardian_name' => 'Try '.$i])->assertRedirect(route('family.dashboard'));
+        }
+
+        Mail::assertSent(FamilyLoginLink::class, 6);
+        $this->assertSame('Try 8', $app->fresh()->guardian_name, 'answers are still saved once the emails stop');
     }
 
     public function test_applications_can_be_closed_by_the_office(): void

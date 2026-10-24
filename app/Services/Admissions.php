@@ -25,11 +25,11 @@ class Admissions
         return (int) GradeCapacity::query()->where('entry_year', $year)->where('grade', $grade)->value('seats');
     }
 
-    /** Offers out, accepted and enrolled: every one holds a seat. */
+    /** Open offers, accepted and enrolled: every one holds a seat (expired offers don't). */
     public function seatsHeld(string $year, string $grade, ?int $exceptId = null): int
     {
         return Application::query()->where('entry_year', $year)->where('grade', $grade)
-            ->whereIn('status', AdmissionStatus::seatHolding())
+            ->holdingSeat()
             ->when($exceptId, fn ($q) => $q->where('id', '!=', $exceptId))
             ->count();
     }
@@ -42,7 +42,7 @@ class Admissions
     /**
      * Seats, holds, waitlist and pipeline per grade for one entry year.
      *
-     * @return list<array{grade: string, label: string, section: string, seats: int, offered: int, accepted: int, enrolled: int, held: int, left: int, waitlist: int, in_pipeline: int, next_waitlisted: Application|null}>
+     * @return list<array{grade: string, label: string, section: string, seats: int, offered: int, expired: int, accepted: int, enrolled: int, held: int, left: int, waitlist: int, in_pipeline: int, next_waitlisted: Application|null}>
      */
     public function summary(string $year): array
     {
@@ -51,19 +51,26 @@ class Admissions
         $counts = Application::query()->where('entry_year', $year)
             ->selectRaw('grade, status, count(*) as total')->groupBy('grade', 'status')->toBase()->get()
             ->groupBy('grade');
+        // Offers past their reply-by date no longer hold a seat.
+        $expired = Application::query()->where('entry_year', $year)->where('status', AdmissionStatus::Offered)
+            ->whereNotNull('offer_expires_at')->where('offer_expires_at', '<=', now())
+            ->selectRaw('grade, count(*) as total')->groupBy('grade')->toBase()->pluck('total', 'grade');
 
         $rows = [];
         foreach ((array) config('hillel.grades') as $grade => $meta) {
             $byStatus = collect($counts->get($grade, []))->pluck('total', 'status');
             $n = fn (AdmissionStatus $s) => (int) ($byStatus[$s->value] ?? 0);
-            $held = $n(AdmissionStatus::Offered) + $n(AdmissionStatus::Accepted) + $n(AdmissionStatus::Enrolled);
+            $lapsed = (int) ($expired[$grade] ?? 0);
+            $offered = $n(AdmissionStatus::Offered) - $lapsed;
+            $held = $offered + $n(AdmissionStatus::Accepted) + $n(AdmissionStatus::Enrolled);
             $seats = (int) ($capacities[$grade] ?? 0);
             $rows[] = [
                 'grade' => $grade,
                 'label' => $meta['label'],
                 'section' => $meta['section'],
                 'seats' => $seats,
-                'offered' => $n(AdmissionStatus::Offered),
+                'offered' => $offered,
+                'expired' => $lapsed,
                 'accepted' => $n(AdmissionStatus::Accepted),
                 'enrolled' => $n(AdmissionStatus::Enrolled),
                 'held' => $held,
@@ -97,8 +104,10 @@ class Admissions
         }
 
         DB::transaction(function () use ($application, $to, $by, $note) {
-            if ($to->holdsSeat() && ! $application->status->holdsSeat()) {
-                $seats = $this->seats($application->entry_year, $application->grade);
+            if ($to->holdsSeat() && ! $application->holdsSeat()) {
+                // Lock the grade's capacity row so two staff can't both take the last seat.
+                $seats = (int) GradeCapacity::query()->where('entry_year', $application->entry_year)
+                    ->where('grade', $application->grade)->lockForUpdate()->value('seats');
                 $held = $this->seatsHeld($application->entry_year, $application->grade, $application->id);
                 if ($held >= $seats) {
                     throw ValidationException::withMessages([

@@ -241,4 +241,35 @@ class AdmissionsPipelineTest extends TestCase
         $this->assertSame(22, GradeCapacity::where('grade', 'g4')->value('seats'));
         $this->assertSame(0, GradeCapacity::where('grade', 'nope')->count());
     }
+
+    public function test_an_expired_offer_gives_its_seat_back_to_the_grade(): void
+    {
+        $this->seats(1);
+        $expired = Application::factory()->status(AdmissionStatus::Offered)->create(['grade' => 'g4', 'entry_year' => $this->year]);
+        $expired->forceFill(['offer_expires_at' => now()->subDay()])->save();
+        $next = Application::factory()->status(AdmissionStatus::Waitlisted)->create(['grade' => 'g4', 'entry_year' => $this->year]);
+
+        $admissions = app(Admissions::class);
+        $this->assertSame(0, $admissions->seatsHeld($this->year, 'g4'));
+        $row = collect($admissions->summary($this->year))->firstWhere('grade', 'g4');
+        $this->assertSame([0, 1, 1], [$row['offered'], $row['expired'], $row['left']]);
+
+        $this->actingAs($this->staff)->patch(route('admin.applications.status', $next), ['status' => 'offered'])->assertSessionHasNoErrors();
+        $this->assertSame(AdmissionStatus::Offered, $next->fresh()->status);
+
+        // The lapsed family calling in can't take the place back once it has gone to someone else.
+        $this->patch(route('admin.applications.status', $expired), ['status' => 'accepted'])->assertSessionHasErrors('status');
+        $this->get(route('admin.dashboard'))->assertOk()->assertSee('1 expired');
+    }
+
+    public function test_assessment_slots_for_other_grades_never_crowd_out_suitable_ones(): void
+    {
+        foreach (range(1, 45) as $i) {
+            AssessmentSlot::create(['starts_at' => now()->addDays(2)->addMinutes($i), 'location' => 'Hall', 'capacity' => 5, 'grades' => ['g12', 'g13']]);
+        }
+        $later = AssessmentSlot::create(['starts_at' => now()->addDays(9), 'location' => 'Library', 'capacity' => 5, 'grades' => ['g4']]);
+        $any = AssessmentSlot::create(['starts_at' => now()->addDays(10), 'location' => 'Library', 'capacity' => 5]);
+
+        $this->assertSame([$later->id, $any->id], AssessmentSlot::bookableFor('g4')->limit(40)->pluck('id')->all());
+    }
 }

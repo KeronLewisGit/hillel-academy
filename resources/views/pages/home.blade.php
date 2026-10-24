@@ -3,7 +3,7 @@
 @endphp
 <x-layouts.site>
     {{-- Hero: ink-blue exercise-book page beside a big campus photo --}}
-    <section class="on-dark relative isolate overflow-hidden bg-navy-900 text-white">
+    <section class="on-dark relative isolate overflow-hidden bg-ink-900 text-white">
         <div class="grid lg:min-h-[38rem] lg:grid-cols-[1.05fr_1fr]">
             <div class="ruled ruled-margin relative order-2 flex items-center lg:order-1">
                 <div class="w-full px-4 pb-14 pt-10 sm:px-6 sm:pl-16 lg:py-20 lg:pl-[max(4rem,calc((100vw-78rem)/2+4rem))] lg:pr-12">
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-            <x-photo key="campus-buildings" :alt="hillel('photos.campus-buildings.alt')" :eager="true" sizes="(min-width: 1024px) 50vw, 100vw" class="hero-photo order-1 aspect-[3/2] lg:order-2 lg:aspect-auto" :tab="hillel('photos.campus-buildings.tab')" />
+            <x-photo key="campus-buildings" :alt="hillel('photos.campus-buildings.alt')" :eager="true" sizes="(min-width: 1024px) 50vw, 100vw" class="hero-photo order-1 aspect-[3/2] lg:order-2 lg:aspect-auto" img-class="object-[52%_70%]" :tab="hillel('photos.campus-buildings.tab')" />
         </div>
         <div class="h-1.5 bg-accent" aria-hidden="true"></div>
     </section>
@@ -102,8 +102,8 @@
                 <div class="mt-6 grid gap-5 sm:grid-cols-3">
                     @foreach ($news as $post)
                         <article class="panel flex flex-col overflow-hidden">
-                            @if ($post->imageUrl())<img src="{{ $post->imageUrl() }}" alt="{{ $post->image_alt }}" class="aspect-[16/10] w-full object-cover" loading="lazy">@else<div class="ruled bg-sky px-5 pb-3 pt-6" aria-hidden="true"><span class="font-display text-3xl leading-none">{{ $post->published_at->format('j M') }}</span></div>@endif
-                            <div class="p-5"><p class="text-sm text-ink-3">{{ $post->published_at->format('j F Y') }}</p><h3 class="display-4 mt-1"><a class="hover:text-link" href="{{ route('news.show', $post) }}">{{ $post->title }}</a></h3></div>
+                            @if ($post->imageUrl())<img src="{{ $post->imageUrl() }}" alt="{{ $post->image_alt }}" class="aspect-[16/10] w-full object-cover" loading="lazy">@else<div class="bg-sky px-5 pb-4 pt-6" aria-hidden="true"><span class="block font-display text-3xl leading-none">{{ $post->published_at->format('j M') }}</span><span class="mt-1 block text-sm font-semibold text-ink-2">{{ $post->published_at->format('Y') }}</span></div>@endif
+                            <div class="p-5"><p class="text-sm text-ink-3 @unless ($post->imageUrl()) sr-only @endunless">{{ $post->published_at->format('j F Y') }}</p><h3 class="display-4 mt-1"><a class="hover:text-link" href="{{ route('news.show', $post) }}">{{ $post->title }}</a></h3></div>
                         </article>
                     @endforeach
                 </div>
@@ -119,7 +119,7 @@
 
     {{-- Visit band --}}
     <section class="wrap mt-20 md:mt-28">
-        <div class="on-dark ruled relative overflow-hidden rounded-2xl bg-navy-900 p-8 text-white sm:p-12">
+        <div class="on-dark ruled relative overflow-hidden rounded-2xl bg-ink-900 p-8 text-white sm:p-12">
             <div class="grid items-center gap-8 lg:grid-cols-[1.4fr_1fr]">
                 <div><x-margin-note>Visit</x-margin-note><h2 class="display-2 mt-3">Walk the campus before you decide</h2><p class="lead mt-4 text-white/85">Pick a tour time online. Or call Admissions on {{ format_phone(setting('phone_admissions')) }}.</p></div>
                 <div class="flex flex-wrap gap-3 lg:justify-end"><a href="{{ route('visit') }}" class="btn btn-accent">Book a visit<x-icon name="arrow-right" class="nudge h-4 w-4" /></a><a href="{{ route('enquire') }}" class="btn btn-on-dark">Ask a question</a></div>

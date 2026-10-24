@@ -6,7 +6,7 @@
 --}}
 <span {{ $attributes->merge(['class' => 'inline-flex items-center gap-2.5']) }}>
     <svg viewBox="0 0 44 44" class="h-10 w-10 flex-none" aria-hidden="true">
-        <rect width="44" height="44" rx="10" fill="{{ $tone === 'light' ? '#ffffff' : 'var(--ink-900)' }}"/>
+        <rect width="44" height="44" rx="10" @class(['logo-tile' => $tone !== 'light']) fill="{{ $tone === 'light' ? '#ffffff' : 'var(--ink-900)' }}"/>
         <circle cx="22" cy="19" r="7" fill="var(--accent)"/>
         <path d="M7 31.5c5-2.6 10-2.6 15 0 5-2.6 10-2.6 15 0V35c-5-2.6-10-2.6-15 0-5-2.6-10-2.6-15 0z" fill="{{ $tone === 'light' ? 'var(--ink-900)' : '#ffffff' }}"/>
         <path d="M22 31.5V35" stroke="{{ $tone === 'light' ? '#ffffff' : 'var(--ink-900)' }}" stroke-width="1.2"/>

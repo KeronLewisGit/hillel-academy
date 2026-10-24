@@ -56,7 +56,7 @@ class DashboardController extends Controller
                 ['label' => 'New enquiries waiting', 'value' => Enquiry::open()->where('kind', EnquiryKind::Admissions)->count(), 'note' => ($general = Enquiry::open()->where('kind', EnquiryKind::General)->count()).' general '.str('message')->plural($general), 'href' => route('admin.enquiries.index')],
                 ['label' => 'Ready to book an assessment', 'value' => Application::where('status', AdmissionStatus::DocsComplete)->count(), 'note' => ($sessions = AssessmentSlot::upcoming()->count()).' upcoming '.str('session')->plural($sessions), 'href' => route('admin.applications.index', ['status' => 'docs_complete'])],
                 ['label' => 'Assessed, awaiting a decision', 'value' => Application::where('status', AdmissionStatus::Assessed)->count(), 'note' => 'Offer, waitlist or decline', 'href' => route('admin.applications.index', ['status' => 'assessed'])],
-                ['label' => 'Offers awaiting a reply', 'value' => Application::where('status', AdmissionStatus::Offered)->count(), 'note' => Application::where('status', AdmissionStatus::Offered)->where('offer_expires_at', '<', now()->addDays(3))->count().' expire within 3 days', 'href' => route('admin.applications.index', ['status' => 'offered'])],
+                ['label' => 'Offers awaiting a reply', 'value' => Application::where('status', AdmissionStatus::Offered)->holdingSeat()->count(), 'note' => $this->offerNote(), 'href' => route('admin.applications.index', ['status' => 'offered'])],
             ],
             'weekly' => $weekly,
             'weeklyMax' => max(1, (int) $weekly->max('count')),
@@ -69,6 +69,16 @@ class DashboardController extends Controller
             'recent' => Application::submitted()->with('family', 'documents')->latest('submitted_at')->limit(6)->get(),
             'teachers' => $user->isAdmin() ? TeacherApplication::awaitingReview()->count() : null,
         ]);
+    }
+
+    /** "2 expire within 3 days · 1 expired": open offers close to their date, and lapsed ones. */
+    private function offerNote(): string
+    {
+        $offered = Application::where('status', AdmissionStatus::Offered);
+        $soon = (clone $offered)->where('offer_expires_at', '>', now())->where('offer_expires_at', '<', now()->addDays(3))->count();
+        $expired = (clone $offered)->where('offer_expires_at', '<=', now())->count();
+
+        return $soon.' expire within 3 days'.($expired ? ' · '.$expired.' expired' : '');
     }
 
     private function year(Request $request): string

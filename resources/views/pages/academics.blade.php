@@ -1,5 +1,5 @@
 <x-layouts.site title="Academics" description="Academics at Hillel Academy, Kingston: National Standards Curriculum in the Prep School, then IMYC, Cambridge IGCSE and the IB Diploma.">
-    <x-page-header title="Learning at Hillel" note="Academics" :lead="hillel('academics.lead')" photo="campus-buildings" />
+    <x-page-header title="Learning at Hillel" note="Academics" :lead="hillel('academics.lead')" photo="{{ hillel('academics.photo') }}" />
 
     {{-- The whole journey at a glance, as binder tabs --}}
     <nav class="border-b border-line bg-surface" aria-label="Stages">

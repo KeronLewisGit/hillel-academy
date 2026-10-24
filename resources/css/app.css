@@ -49,7 +49,6 @@
     --primary: #14213d;
     --primary-hover: #26396b;
     --primary-ink: #ffffff;
-    --go: #17694a;
 
     --series-1: #2a62c9;
     --series-track: #e3ebf7;
@@ -83,7 +82,6 @@
         --primary: #f0ac1c;
         --primary-hover: #f7bd3f;
         --primary-ink: #14213d;
-        --go: #4cc38a;
         --series-1: #5b8ee6;
         --series-track: #1b2944;
         --muted-dot: #6f7a8f;
@@ -111,7 +109,6 @@
     --primary: #f0ac1c;
     --primary-hover: #f7bd3f;
     --primary-ink: #14213d;
-    --go: #4cc38a;
     --series-1: #5b8ee6;
     --series-track: #1b2944;
     --muted-dot: #6f7a8f;
@@ -135,17 +132,14 @@
     --color-line-strong: var(--line-strong);
     --color-link: var(--link);
     --color-margin: var(--margin);
-    --color-navy-950: var(--ink-950);
-    --color-navy-900: var(--ink-900);
-    --color-navy-800: var(--ink-800);
-    --color-navy-700: var(--ink-700);
+    --color-ink-950: var(--ink-950);
+    --color-ink-900: var(--ink-900);
     --color-accent: var(--accent);
     --color-accent-hover: var(--accent-hover);
     --color-accent-ink: var(--accent-ink);
     --color-accent-soft: var(--accent-soft);
     --color-primary: var(--primary);
     --color-primary-ink: var(--primary-ink);
-    --color-go: var(--go);
     --color-series: var(--series-1);
     --color-series-track: var(--series-track);
 
@@ -188,7 +182,7 @@
     }
     .js [x-cloak] { display: none !important; }
     /* On ink bands the focus ring turns marigold; on marigold it turns ink. */
-    :where(header, footer, .on-dark, .bg-navy-900, .bg-navy-950) :focus-visible { outline-color: var(--accent); }
+    :where(header, footer, .on-dark, .bg-ink-900, .bg-ink-950) :focus-visible { outline-color: var(--accent); }
     :where(.bg-accent, .btn-accent) :focus-visible, .btn-accent:focus-visible { outline-color: var(--ink-900); }
 }
 
@@ -224,7 +218,6 @@
     /* Index tab: the coloured tab on a ring-binder divider, used on cards and steps. */
     .tab { position: relative; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.3rem 0.9rem 0.3rem 0.8rem; border-radius: 6px 6px 0 0; background: var(--accent); color: var(--accent-ink); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.02em; }
     .tab-sky { background: var(--sky); color: var(--ink); }
-    .tab-ink { background: var(--ink-900); color: #fff; }
     .tabbed { border-top: 4px solid var(--accent); border-radius: 0 6px 6px 6px; }
 
     .prose-copy p + p, .prose-copy ul, .prose-copy p + ul, .prose-copy ul + p { margin-top: 1rem; }
@@ -362,7 +355,7 @@
 /* Outer columns line up with the 20px card padding used everywhere in the dashboard. */
 .data-table th:first-child, .data-table td:first-child { padding-left: 1.25rem; }
 .data-table th:last-child, .data-table td:last-child { padding-right: 1.25rem; }
-.a-input { min-height: 2.75rem; padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 0.9375rem; }
+.a-input { min-width: 0; max-width: 100%; min-height: 2.75rem; padding: 0.5rem 0.75rem; border-radius: 4px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-size: 0.9375rem; }
 .a-input:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 28%, transparent); }
 .a-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.75rem; padding: 0.5rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.9375rem; }
 .a-btn-primary { background: var(--primary); color: var(--primary-ink); }
@@ -381,6 +374,11 @@
 }
 
 /* Theme toggle icon swap */
+/* The logo tile is ink-900, which almost matches the dark header: lift it a step. */
+:root[data-theme='dark'] .logo-tile { fill: var(--ink-700); }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .logo-tile { fill: var(--ink-700); }
+}
 .dark-show { display: none; }
 :root[data-theme='dark'] .dark-show { display: block; }
 :root[data-theme='dark'] .dark-hide { display: none; }

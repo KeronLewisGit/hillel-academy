@@ -49,14 +49,6 @@ class UserController extends Controller
         return to_route('admin.users.index')->with('status', 'Staff account saved.');
     }
 
-    public function destroy(Request $request, User $user): RedirectResponse
-    {
-        abort_if($user->is($request->user()), 403, 'You can’t delete your own account.');
-        $user->update(['active' => false]);
-
-        return to_route('admin.users.index')->with('status', $user->name.' deactivated.');
-    }
-
     /** @return array<string, mixed> */
     private function validated(Request $request, ?User $user = null): array
     {

@@ -29,7 +29,6 @@ return [
     'footer_line' => 'An independent, non-denominational, not-for-profit international school in the foothills of the Blue Mountains since 1969.',
     'legal_line' => 'Learning for Living.',
     'founded' => 1969,
-    'motto' => 'Learning for Living',
 
     'address' => ['street' => '51 Upper Mark Way', 'city' => 'Kingston 8', 'region' => 'St. Andrew', 'country' => 'JM', 'country_name' => 'Jamaica'],
     'map_url' => 'https://www.openstreetmap.org/search?query=51%20Upper%20Mark%20Way%2C%20Kingston%208%2C%20Jamaica',
@@ -191,7 +190,7 @@ return [
     ],
 
     'about' => [
-        'photo' => 'campus-buildings',
+        'photo' => 'campus-aerial',
         'lead' => 'The largest international school in Jamaica, in its own words: independent, co-educational, multicultural and non-denominational, and run as a private not-for-profit institution.',
         'history' => [
             'Hillel Academy was founded in 1969 by the United Congregation of Israelites in Jamaica. The Gleaner credits Rabbi Bernard Hooker and Eli Matalon as its founders. The school began with 11 students in Rabbi Hooker’s house on Oxford Road in New Kingston.',
@@ -215,7 +214,7 @@ return [
             'Accreditation' => 'NEASC; authorised by Cambridge and the IB',
             'Campus' => 'About 13 acres, 51 Upper Mark Way, Kingston 8',
         ],
-        'gallery' => ['campus-aerial', 'sports-day'],
+        'gallery' => ['campus-buildings', 'sports-day'],
     ],
 
     'academics' => [
@@ -224,6 +223,8 @@ return [
     ],
 
     'admissions_photo' => 'campus-aerial',
+
+    'visit_photo' => 'football',
 
     'school_life' => [
         'photo' => 'sports-day',
@@ -248,10 +249,6 @@ return [
             'The calendar includes Founders Day, the Carol and Hanukkah Hour, sports days, a road race, prizegivings and the book fair.',
         ],
         'gallery' => ['football', 'drama'],
-    ],
-
-    'careers' => [
-        'photo' => 'campus-buildings',
     ],
 
     // Photos in public/img ({key}-{480,960,1920}.webp). Credits in config/photo-credits.php.

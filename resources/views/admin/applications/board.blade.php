@@ -5,7 +5,7 @@
     @include('admin.applications._filters')
     <div x-data="pipeline" class="relative">
         <div x-show="toast" x-cloak x-transition role="status" class="fixed bottom-6 left-1/2 z-50 max-w-[90vw] -translate-x-1/2 rounded-lg bg-ink px-4 py-2.5 text-sm font-medium text-bg shadow-xl" x-text="toast"></div>
-        <p class="mb-4 text-sm text-ink-2">Drag a card to another column to move it. Offers check the grade’s capacity first. Not offered or withdrawn: <a class="text-link underline" href="{{ route('admin.applications.index', ['status' => 'declined']) }}">{{ $closed }}</a> · Started, not submitted: <a class="text-link underline" href="{{ route('admin.applications.index', ['status' => 'draft']) }}">{{ $drafts }}</a></p>
+        <p class="mb-4 text-sm text-ink-2">Drag a card to another column to move it. Offers check the grade’s capacity first. Not offered or withdrawn: <a class="inline-flex min-h-11 min-w-11 items-center justify-center text-link underline" href="{{ route('admin.applications.index', ['status' => 'declined']) }}">{{ $closed }}</a> · Started, not submitted: <a class="inline-flex min-h-11 min-w-11 items-center justify-center text-link underline" href="{{ route('admin.applications.index', ['status' => 'draft']) }}">{{ $drafts }}</a></p>
         <div class="flex gap-3 overflow-x-auto pb-4">
             @foreach ($columns as $stage => $apps)
                 @php($status = \App\Enums\AdmissionStatus::from($stage))
@@ -21,7 +21,7 @@
                                 <div class="mt-2 flex flex-wrap gap-1">
                                     @if ($pending)<x-chip tone="attention" icon="file" class="!text-[0.6875rem]">{{ $pending }} to review</x-chip>@endif
                                     @if ($a->assessmentSlot && $stage === 'assessment_booked')<x-chip tone="neutral" icon="calendar" class="!text-[0.6875rem]">{{ $a->assessmentSlot->starts_at->format('D j M') }}</x-chip>@endif
-                                    @if ($stage === 'offered' && $a->offer_expires_at)<x-chip :tone="$a->offer_expires_at->lt(now()->addDays(3)) ? 'attention' : 'neutral'" icon="clock" class="!text-[0.6875rem]">Reply by {{ $a->offer_expires_at->format('j M') }}</x-chip>@endif
+                                    @if ($stage === 'offered' && $a->offer_expires_at)@if ($a->offerIsOpen())<x-chip :tone="$a->offer_expires_at->lt(now()->addDays(3)) ? 'attention' : 'neutral'" icon="clock" class="!text-[0.6875rem]">Reply by {{ $a->offer_expires_at->format('j M') }}</x-chip>@else<x-chip tone="critical" icon="alert" class="!text-[0.6875rem]">Expired {{ $a->offer_expires_at->format('j M') }}</x-chip>@endif @endif
                                     @if ($stage === 'waitlisted')<x-chip tone="neutral" icon="clock" class="!text-[0.6875rem]">Since {{ $a->waitlisted_at?->format('j M') }}</x-chip>@endif
                                 </div>
                             </article>

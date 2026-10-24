@@ -50,7 +50,7 @@ if (empty($env['APP_KEY'])) {
 $ok = $run('migrate', ['--force' => true]) && $ok;
 // Loads the email templates and the published fee table (only into empty tables).
 $ok = $run('db:seed', ['--force' => true]) && $ok;
-// Only views and routes are cached here. Caching config would make later .env edits
+// Only views are cached here. Caching config would make later .env edits
 // (office email, mail password) silently ignored on hosts without SSH.
 $run('view:cache');
 
