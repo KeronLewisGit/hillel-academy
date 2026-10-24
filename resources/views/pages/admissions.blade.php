@@ -39,7 +39,7 @@
     </section>
 
     <section id="entry" class="ruled ruled-margin mt-20 bg-sky py-16 md:py-20" aria-labelledby="entry-title">
-        <div class="wrap sm:pl-16">
+        <div class="wrap">
             <x-margin-note>Entry by grade</x-margin-note>
             <h2 id="entry-title" class="display-2 mt-3">Which grade?</h2>
             <p class="lead mt-4 text-ink-2">The Prep School takes children aged 3 to 11 and the High School students aged 11 to 19. A guide to where children usually start:</p>

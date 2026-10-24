@@ -23,7 +23,7 @@
 
     {{-- Hillel PRIDE: the five values, each on its own index tab --}}
     <section class="ruled ruled-margin mt-20 bg-sky py-16 md:py-20" aria-labelledby="values-title">
-        <div class="wrap sm:pl-16">
+        <div class="wrap">
             <x-margin-note>Our values</x-margin-note>
             <h2 id="values-title" class="display-2 mt-3">Hillel PRIDE</h2>
             <p class="lead mt-4 text-ink-2">Five core values, shown every day in the words we use, the choices we make and the actions we take.</p>

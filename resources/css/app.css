@@ -187,9 +187,11 @@
 }
 
 @layer components {
-    .wrap { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: 1rem; }
-    @media (min-width: 640px) { .wrap { padding-inline: 1.5rem; } }
-    @media (min-width: 1024px) { .wrap { padding-inline: 2rem; } }
+    /* One gutter for every block, so headers, heroes, sections and the footer share a left edge. */
+    :root { --gutter: 1rem; --wrap-max: 78rem; }
+    @media (min-width: 640px) { :root { --gutter: 1.5rem; } }
+    @media (min-width: 1024px) { :root { --gutter: 2rem; } }
+    .wrap { width: 100%; max-width: var(--wrap-max); margin-inline: auto; padding-inline: var(--gutter); }
 
     .display-1 { font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem); line-height: 1.02; letter-spacing: -0.015em; }
     .display-2 { font-size: clamp(2.15rem, 1.55rem + 2.5vw, 3.6rem); line-height: 1.06; letter-spacing: -0.01em; }
@@ -203,22 +205,38 @@
      * Motif: the exercise book. A margin note is a short label set against a red
      * margin rule, the way a teacher annotates the side of a page.
      */
-    .margin-note { font-family: var(--ff-sans), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: 0.7rem; font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); }
-    .margin-note::before { content: ''; width: 3px; height: 1.35rem; flex: none; border-left: 1px solid var(--margin); border-right: 1px solid var(--margin); }
+    /*
+     * Every red mark (margin-note bars and the ruled-band margin) starts exactly on the
+     * content edge, the same x as the logo and headings. Text written "in the book"
+     * starts one indent (--rule-hang) to the right of the line.
+     */
+    :root { --rule-w: 4px; --rule-gap: 0.75rem; --rule-hang: calc(var(--rule-w) + var(--rule-gap)); }
+    .margin-note { font-family: var(--ff-sans), ui-sans-serif, system-ui, sans-serif; display: inline-flex; align-items: center; gap: var(--rule-gap); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); }
+    .margin-note::before { content: ''; width: var(--rule-w); height: 1.35rem; flex: none; border-left: 1px solid var(--margin); border-right: 1px solid var(--margin); }
     .on-dark .margin-note { color: rgb(255 255 255 / 0.82); }
     .on-dark .margin-note::before { border-color: var(--accent); }
 
-    /* Ruled paper: faint blue lines, with the red margin down the left. */
+    /* Ruled paper: faint blue lines; .ruled-margin adds the red margin on the content edge. */
     .ruled { background-image: repeating-linear-gradient(180deg, transparent 0 calc(2rem - 1px), var(--rule) calc(2rem - 1px) 2rem); }
     .ruled-margin { position: relative; }
-    .ruled-margin::before { display: none; content: ''; position: absolute; inset-block: 0; left: clamp(0.5rem, 3vw, 2.75rem); width: 4px; border-left: 1px solid var(--margin); border-right: 1px solid var(--margin); opacity: 0.55; pointer-events: none; }
-    @media (min-width: 640px) { .ruled-margin::before { display: block; } }
+    .ruled-margin::before { display: none; content: ''; position: absolute; inset-block: 0; left: calc(max(0px, (100% - var(--wrap-max)) / 2) + var(--gutter)); width: var(--rule-w); border-left: 1px solid var(--margin); border-right: 1px solid var(--margin); opacity: 0.55; pointer-events: none; }
+    @media (min-width: 640px) {
+        .ruled-margin::before { display: block; }
+        /* Content inside a ruled band is written after the margin, level with the margin-note labels. */
+        .ruled-margin > .wrap { padding-left: calc(var(--gutter) + var(--rule-hang)); }
+        .ruled-margin > .wrap .margin-note { margin-left: calc(-1 * var(--rule-hang)); }
+    }
     .on-dark.ruled, .on-dark .ruled { background-image: repeating-linear-gradient(180deg, transparent 0 calc(2rem - 1px), rgb(255 255 255 / 0.06) calc(2rem - 1px) 2rem); }
 
     /* Index tab: the coloured tab on a ring-binder divider, used on cards and steps. */
     .tab { position: relative; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.3rem 0.9rem 0.3rem 0.8rem; border-radius: 6px 6px 0 0; background: var(--accent); color: var(--accent-ink); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.02em; }
     .tab-sky { background: var(--sky); color: var(--ink); }
     .tabbed { border-top: 4px solid var(--accent); border-radius: 0 6px 6px 6px; }
+
+    /* Calendar-page date tile: fixed size, pinned to the top of its row, shared by news and events. */
+    .date-tile { display: grid; flex: none; align-self: flex-start; place-content: center; justify-items: center; gap: 0.3rem; width: 3.5rem; height: 3.75rem; border-radius: 0.5rem; background: var(--sky); text-align: center; line-height: 1; }
+    .date-tile-month { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+    .date-tile-day { font-family: var(--ff-display), Georgia, serif; font-size: 1.5rem; }
 
     .prose-copy p + p, .prose-copy ul, .prose-copy p + ul, .prose-copy ul + p { margin-top: 1rem; }
     .prose-copy h2 { font-size: 1.6rem; margin-top: 2.25rem; margin-bottom: 0.5rem; }

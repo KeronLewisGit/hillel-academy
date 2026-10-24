@@ -21,7 +21,7 @@
     </section>
 
     <section class="ruled ruled-margin mt-20 bg-sky py-16 md:py-20" aria-labelledby="houses-title">
-        <div class="wrap grid gap-10 sm:pl-16 lg:grid-cols-[1fr_1.2fr]">
+        <div class="wrap grid gap-10 lg:grid-cols-[1fr_1.2fr]">
             <div>
                 <x-margin-note>Houses & traditions</x-margin-note>
                 <h2 id="houses-title" class="display-2 mt-3">Four houses, one school</h2>

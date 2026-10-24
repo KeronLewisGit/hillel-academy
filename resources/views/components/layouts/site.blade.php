@@ -134,23 +134,23 @@
             </div>
             <div>
                 <h2 class="margin-note">School</h2>
-                <ul class="mt-5 space-y-2.5">
-                    <li><a class="hover:text-white" href="{{ route('about') }}">About Hillel</a></li>
-                    <li><a class="hover:text-white" href="{{ route('academics') }}">Academics</a></li>
-                    <li><a class="hover:text-white" href="{{ route('school-life') }}">School life</a></li>
-                    <li><a class="hover:text-white" href="{{ route('news.index') }}">News</a></li>
-                    <li><a class="hover:text-white" href="{{ route('calendar') }}">Calendar</a></li>
-                    <li><a class="hover:text-white" href="{{ route('careers.index') }}">Careers</a></li>
+                <ul class="mt-3">
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('about') }}">About Hillel</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('academics') }}">Academics</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('school-life') }}">School life</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('news.index') }}">News</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('calendar') }}">Calendar</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('careers.index') }}">Careers</a></li>
                 </ul>
             </div>
             <div>
                 <h2 class="margin-note">Admissions</h2>
-                <ul class="mt-5 space-y-2.5">
-                    <li><a class="hover:text-white" href="{{ route('admissions') }}">How to apply</a></li>
-                    <li><a class="hover:text-white" href="{{ route('admissions') }}#fees">Fees {{ setting('fees_year') }}</a></li>
-                    <li><a class="hover:text-white" href="{{ route('enquire') }}">Ask a question</a></li>
-                    <li><a class="hover:text-white" href="{{ route('visit') }}">Campus visits</a></li>
-                    <li><a class="hover:text-white" href="{{ route('family.login') }}">Family portal</a></li>
+                <ul class="mt-3">
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('admissions') }}">How to apply</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('admissions') }}#fees">Fees {{ setting('fees_year') }}</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('enquire') }}">Ask a question</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('visit') }}">Campus visits</a></li>
+                    <li><a class="inline-flex min-h-11 items-center hover:text-white lg:min-h-9" href="{{ route('family.login') }}">Family portal</a></li>
                 </ul>
             </div>
             <div>
