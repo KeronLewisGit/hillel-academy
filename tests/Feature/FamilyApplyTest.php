@@ -229,6 +229,16 @@ class FamilyApplyTest extends TestCase
         $this->assertFalse(demo_links());
     }
 
+    public function test_a_hosted_concept_preview_may_show_demo_links_in_production(): void
+    {
+        $this->app->detectEnvironment(fn () => 'production');
+        config(['hillel.demo_links' => true, 'hillel.preview' => true]);
+        $this->assertTrue(demo_links());
+
+        config(['hillel.demo_links' => false]);
+        $this->assertFalse(demo_links());
+    }
+
     public function test_save_and_finish_later_stops_emailing_after_a_few_links_an_hour(): void
     {
         Mail::fake();

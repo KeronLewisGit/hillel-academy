@@ -12,13 +12,14 @@ if (! function_exists('hillel')) {
 
 if (! function_exists('demo_links')) {
     /**
-     * Whether sign-in links are also shown on screen (demos without email). Never in
-     * production, whatever HILLEL_DEMO_LINKS says: on a live site it would let anyone
-     * sign in as any family by typing their email address.
+     * Whether sign-in links are also shown on screen (demos without email). Never on the
+     * school's live site, whatever HILLEL_DEMO_LINKS says: there it would let anyone sign in
+     * as any family by typing their email address. A hosted concept preview (HILLEL_PREVIEW)
+     * holds demo families only, so it may show them.
      */
     function demo_links(): bool
     {
-        return (bool) config('hillel.demo_links') && ! app()->isProduction();
+        return (bool) config('hillel.demo_links') && (! app()->isProduction() || (bool) hillel('preview'));
     }
 }
 
