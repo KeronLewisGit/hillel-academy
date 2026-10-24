@@ -29,7 +29,7 @@
             <p class="lead mt-4 text-ink-2">Five core values, shown every day in the words we use, the choices we make and the actions we take.</p>
             <ol class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 @foreach (hillel('about.values') as $v)
-                    <li data-reveal style="--reveal-delay: {{ $loop->index * 70 }}ms"><span class="tab font-display !text-lg">{{ $v['letter'] }}</span><div class="panel tabbed h-full rounded-tl-none p-5"><h3 class="display-4">{{ $v['name'] }}</h3><p class="mt-1 text-ink-2">{{ ucfirst($v['text']) }}</p></div></li>
+                    <li class="flex flex-col" data-reveal style="--reveal-delay: {{ $loop->index * 70 }}ms"><span class="tab self-start font-display !text-lg">{{ $v['letter'] }}</span><div class="panel tabbed flex-1 rounded-tl-none p-5"><h3 class="display-4">{{ $v['name'] }}</h3><p class="mt-1 text-ink-2">{{ ucfirst($v['text']) }}</p></div></li>
                 @endforeach
             </ol>
         </div>
