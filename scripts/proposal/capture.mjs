@@ -147,13 +147,13 @@ function packBlocks(blocks, maxH, docH) {
 const RATIO = 1.08; // slice height ÷ width that fits a letter page beneath the heading and bullets
 
 async function shoot(name, url, { width = 1440, height = 900, fullPage = true, mobile = false } = {}) {
-  await page.setViewport({ width, height, deviceScaleFactor: mobile ? 2 : 1.25, isMobile: mobile, hasTouch: mobile });
+  await page.setViewport({ width, height, deviceScaleFactor: mobile ? 2 : 1.15, isMobile: mobile, hasTouch: mobile });
   await page.goto(BASE + url, { waitUntil: 'networkidle0' });
   await settle();
   if (url.includes('#')) await page.evaluate((id) => { document.getElementById(id)?.scrollIntoView({ block: 'start' }); window.scrollBy(0, -96); }, url.split('#')[1]);
   if (!fullPage) {
     const file = path.join(OUT, `${name}.jpg`);
-    await page.screenshot({ path: file, type: 'jpeg', quality: 80 });
+    await page.screenshot({ path: file, type: 'jpeg', quality: 70 });
     console.log(`✓ ${name} viewport`);
     return { name, url, chunks: [path.resolve(file)], labels: [[]], mobile };
   }
@@ -164,7 +164,7 @@ async function shoot(name, url, { width = 1440, height = 900, fullPage = true, m
   const files = []; const labels = [];
   for (const [i, g] of groups.entries()) {
     const file = path.join(OUT, groups.length > 1 ? `${name}-${i}.jpg` : `${name}.jpg`);
-    await page.screenshot({ path: file, type: 'jpeg', quality: 80, captureBeyondViewport: true, clip: { x: 0, y: g.top, width, height: g.bottom - g.top } });
+    await page.screenshot({ path: file, type: 'jpeg', quality: 70, captureBeyondViewport: true, clip: { x: 0, y: g.top, width, height: g.bottom - g.top } });
     files.push(path.resolve(file)); labels.push(g.labels ?? []);
   }
   console.log(`✓ ${name} → ${groups.length} slice(s): ${groups.map(g => (g.labels ?? []).join(' | ') || '(no heading)').join('  ·  ')}`);
