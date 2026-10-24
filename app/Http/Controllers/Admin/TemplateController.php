@@ -12,7 +12,7 @@ class TemplateController extends Controller
 {
     public function index(): View
     {
-        return view('admin.templates.index', ['templates' => MessageTemplate::orderByRaw('key is null')->orderBy('name')->get()]);
+        return view('admin.templates.index', ['templates' => MessageTemplate::orderByRaw('message_templates.key is null')->orderBy('name')->get()]);
     }
 
     public function create(): View

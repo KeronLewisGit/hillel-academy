@@ -66,7 +66,7 @@ class ApplicationController extends Controller
             'seats' => $admissions->seats($application->entry_year, $application->grade),
             'position' => $application->waitlistPosition(),
             'slots' => AssessmentSlot::bookableFor($application->grade)->limit(30)->get(),
-            'templates' => MessageTemplate::orderByRaw('key is not null')->orderBy('name')->get(),
+            'templates' => MessageTemplate::orderByRaw('message_templates.key is not null')->orderBy('name')->get(),
             'staff' => User::where('active', true)->orderBy('name')->get(['id', 'name']),
         ]);
     }
