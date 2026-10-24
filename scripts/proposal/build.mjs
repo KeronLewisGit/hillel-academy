@@ -286,7 +286,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
   </div>
   <div class="meta">
     <div><b>Prepared for</b><span class="big">The Director / Head of School</span>Hillel Academy<br>51 Upper Mark Way, Kingston 8, Jamaica<br>Main office (876) 925-1980</div>
-    <div><b>Prepared by</b><span class="big">Keron Lewis</span>Code Canvas Consultants Ltd, Port of Spain<br>codecanvastt.com · +1 868 466-CODE · keronlewis@live.com</div>
+    <div><b>Prepared by</b><span class="big">Keron Lewis</span>Code Canvas Consultants Ltd, Port of Spain<br>codecanvastt.com · +1 868 466-CODE · info@codecanvastt.com</div>
   </div>
 </section>
 
@@ -452,7 +452,7 @@ ${sec.screens.map(s => screenPages(sec, s)).join('')}
   <div class="contact">
     <b>Keron Lewis</b>
     Director, Code Canvas Consultants Ltd · Port of Spain, Trinidad and Tobago<br>
-    codecanvastt.com · +1 868 466-CODE · keronlewis@live.com
+    codecanvastt.com · +1 868 466-CODE · info@codecanvastt.com<br>Book a call: calendly.com/keronlewis/30min
   </div>
   <div style="margin-top:auto"></div>
   ${foot()}
